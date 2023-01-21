@@ -6,19 +6,19 @@ import 'package:test_amartha/domain/repository/todo_repository.dart';
 class TodoRepositoryImpl implements TodoRepository {
   @override
   Future<List<TodoEntity>> fetch() async {
-    List<Map<String, dynamic>> data = await SqfLite.instance.getTodo();
+    List<Map<String, dynamic>> data = await SqfLite.getTodo();
     return TodoModel.parseEntries(data);
   }
 
   @override
   Future<int> addNew(String label) async {
-    return await SqfLite.instance.insertTodo(label: label);
+    return await SqfLite.insertTodo(label: label);
   }
 
   @override
   Future<void> changeStatus(TodoEntity data) async {
     print('${data.id} -> ${data.isActive}');
-    await SqfLite.instance.updateTodo(data: {
+    await SqfLite.updateTodo(data: {
       'id': data.id,
       'label': data.label,
       'is_active': data.isActive ? 1 : 0,

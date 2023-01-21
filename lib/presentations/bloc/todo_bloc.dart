@@ -25,7 +25,7 @@ class TodoBloc extends Cubit<TodoState> {
   TodoBloc({required this.repository}) : super(TodoInitialState());
 
   Future<void> fetchTodoList() async {
-    await SqfLite.instance.init();
+    await SqfLite.init();
 
     await Future.delayed(const Duration(seconds: 2));
     List<TodoEntity> data = await repository.fetch();

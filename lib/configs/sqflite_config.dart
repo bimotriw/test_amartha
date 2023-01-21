@@ -9,11 +9,7 @@ class SqfLite {
 
   static Database? database;
 
-  SqfLite._privateConstructor();
-
-  static final SqfLite instance = SqfLite._privateConstructor();
-
-  Future<void> init() async {
+  static Future<void> init() async {
     var databasePath = await getDatabasesPath();
     final path = join(databasePath, dbName);
     if (await Directory(dirname(path)).exists()) {
@@ -27,11 +23,11 @@ class SqfLite {
     }
   }
 
-  Future<void> _onOpenDatabase(Database database) async {
+  static Future<void> _onOpenDatabase(Database database) async {
     await _createTodoTb(database);
   }
 
-  Future<void> _createTodoTb(Database database) async {
+  static Future<void> _createTodoTb(Database database) async {
     await database.execute("""CREATE TABLE IF NOT EXISTS $tableTodo(
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         label TEXT,
@@ -40,7 +36,7 @@ class SqfLite {
       """);
   }
 
-  Future<int> insertTodo({required String label}) async {
+  static Future<int> insertTodo({required String label}) async {
     var databasePath = await getDatabasesPath();
     final path = join(databasePath, dbName);
     database = await openDatabase(
@@ -50,7 +46,7 @@ class SqfLite {
         await _onOpenDatabase(database);
       },
     );
-    int insertedId = await SqfLite.database!.insert(
+    int insertedId = await database!.insert(
       SqfLite.tableTodo,
       {
         'label': label,
@@ -61,7 +57,7 @@ class SqfLite {
     return insertedId;
   }
 
-  Future<List<Map<String, dynamic>>> getTodo() async {
+  static Future<List<Map<String, dynamic>>> getTodo() async {
     var databasePath = await getDatabasesPath();
     final path = join(databasePath, dbName);
     database = await openDatabase(
@@ -71,10 +67,10 @@ class SqfLite {
         await _onOpenDatabase(database);
       },
     );
-    return await SqfLite.database!.query(SqfLite.tableTodo);
+    return await database!.query(SqfLite.tableTodo);
   }
 
-  Future<void> updateTodo({required Map<String, dynamic> data}) async {
+  static Future<void> updateTodo({required Map<String, dynamic> data}) async {
     var databasePath = await getDatabasesPath();
     final path = join(databasePath, dbName);
     database = await openDatabase(
@@ -85,7 +81,7 @@ class SqfLite {
       },
     );
 
-    await SqfLite.database!.update(
+    await database!.update(
         SqfLite.tableTodo,
         {
           'label': data['label'],
